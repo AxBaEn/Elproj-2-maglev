@@ -1,0 +1,7 @@
+Få Pico att funka: https://community.platformio.org/t/official-platformio-arduino-ide-support-for-the-raspberry-pi-pico-is-now-available/20792/9
+Libraries: https://community.platformio.org/t/how-to-include-arduino-library-in-platformio/15146/2 
+
+
+Möjliga PID libraries:
+https://registry.platformio.org/libraries/dlloydev/QuickPID
+https://registry.platformio.org/libraries/somefunagba/ModernPIDControlSS
