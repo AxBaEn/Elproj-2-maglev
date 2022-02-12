@@ -2,6 +2,7 @@
 #include <PID_v1.h>
 #include <Wire.h>
 #include <VL53L0X.h>
+#include <rp2040.h>
 
 VL53L0X sensor;
 
@@ -18,11 +19,54 @@ double consKp=1, consKi=0.05, consKd=0.25;
 //Specify the links and initial tuning parameters
 PID myPID(&input, &output, &setpoint, consKp, consKi, consKd, DIRECT);
 
-void setup()
-{
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void setup() {
+  //setupCall();
+}
+
+void setup1() {
+
+}
+
+void loop() {
+  /*
+  input = sensor.readRangeContinuousMillimeters();
+  if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
+  else {Serial.print(input);}
+
+  double error = abs(setpoint-input); //distance away from setpoint
+  /*
+  if(error<10)
+  {  //we're close to setpoint, use conservative tuning parameters
+    myPID.SetTunings(consKp, consKi, consKd);
+  }
+  else
+  {
+     //we're far from setpoint, use aggressive tuning parameters
+     myPID.SetTunings(aggKp, aggKi, aggKd);
+  }
+
+  myPID.Compute();
+  analogWrite(3,output);
+  */
+
+
+}
+
+void loop1() {
+  rp2040.fifo.push(HIGH);
+  delay(1000);                       // wait for a second
+  rp2040.fifo.push(LOW);
+  delay(1000);    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void setupCall() {
   //initialize the variables we're linked to
   input = analogRead(0);
-  setpoint = 100;
+  setpoint = 15; //15mm
 
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
@@ -36,25 +80,6 @@ void setup()
     Serial.println("Failed to detect and initialize sensor!");
     while (1) {}
   }
-}
 
-void loop()
-{
-  input = analogRead(0);
-
-  double Error = abs(setpoint-input); //distance away from setpoint
-  /*
-  if(gap<10)
-  {  //we're close to setpoint, use conservative tuning parameters
-    myPID.SetTunings(consKp, consKi, consKd);
-  }
-  else
-  {
-     //we're far from setpoint, use aggressive tuning parameters
-     myPID.SetTunings(aggKp, aggKi, aggKd);
-  }
-  */
-
-  myPID.Compute();
-  analogWrite(3,output);
+  sensor.startContinuous();
 }
