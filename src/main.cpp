@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <PID_v1.h>
 #include <Wire.h>
-#include <VL53L0X.h>
-#include <rp2040.h>
+#include "Adafruit_VL53L0X.h"
+ 
+Adafruit_VL53L0X sensor = Adafruit_VL53L0X();
 
-VL53L0X sensor;
+//VL53L0X sensor;
 
 //Define pins
 const int outPin = 0;
@@ -19,14 +20,41 @@ double consKp=1, consKi=0.05, consKd=0.25;
 //Specify the links and initial tuning parameters
 PID myPID(&input, &output, &setpoint, consKp, consKi, consKd, DIRECT);
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.begin(115200);
+  delay(5000);
+  digitalWrite(LED_BUILTIN, LOW);
+  Serial.println("start");
   //setupCall();
-}
 
-void setup1() {
+  //initialize the variables we're linked to
+  input = analogRead(0);
+  setpoint = 15; //15mm
 
+  //turn the PID on
+  myPID.SetMode(AUTOMATIC);
+
+  Serial.println("Adafruit VL53L0X test");
+  if (!sensor.begin()) {
+    Serial.println(F("Failed to boot VL53L0X"));
+  }
+
+  //Wire.begin();
+
+  /*sensor.setTimeout(500);
+  if (!sensor.init())
+  {
+    Serial.println("Failed to detect and initialize sensor!");
+    while (1) {}
+  }
+
+  sensor.startContinuous();
+  */
 }
 
 void loop() {
@@ -50,36 +78,6 @@ void loop() {
   myPID.Compute();
   analogWrite(3,output);
   */
-
-
-}
-
-void loop1() {
-  rp2040.fifo.push(HIGH);
-  delay(1000);                       // wait for a second
-  rp2040.fifo.push(LOW);
-  delay(1000);    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void setupCall() {
-  //initialize the variables we're linked to
-  input = analogRead(0);
-  setpoint = 15; //15mm
-
-  //turn the PID on
-  myPID.SetMode(AUTOMATIC);
-
-  Serial.begin(9600);
-  Wire.begin();
-
-  sensor.setTimeout(500);
-  if (!sensor.init())
-  {
-    Serial.println("Failed to detect and initialize sensor!");
-    while (1) {}
-  }
-
-  sensor.startContinuous();
-}
