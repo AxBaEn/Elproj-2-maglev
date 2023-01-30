@@ -9,3 +9,6 @@ Multicore processing: https://arduino-pico.readthedocs.io/en/latest/multicore.ht
 Möjliga PID libraries:
 https://registry.platformio.org/libraries/dlloydev/QuickPID
 https://registry.platformio.org/libraries/somefunagba/ModernPIDControlSS
+
+PWM:
+https://www.youtube.com/watch?v=Au-oc4hxj-c 
